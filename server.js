@@ -19,34 +19,28 @@ app.get('/cancel', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/cancel.html'));
 });
 
-app.post('/create-checkout-session', async (req, res) => {
+app.post("/create-checkout-session", async (req, res) => {
   const { amount, plan } = req.body;
 
-  try {
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'cad',
-            product_data: {
-              name: `${plan} Subscription`,
-            },
-            unit_amount: parseInt(amount), // Amount in cents
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    mode: "payment",
+    line_items: [
+      {
+        price_data: {
+          currency: "cad", // or "cad" based on your region
+          product_data: {
+            name: `${plan} Subscription`
           },
-          quantity: 1,
+          unit_amount: amount,
         },
-      ],
-      mode: 'payment',
-      success_url: 'http://localhost:4242/success',
-      cancel_url: 'http://localhost:4242/cancel',
-    });
+        quantity: 1,
+      },
+    ],
+    success_url: "https://www.extrinnov.com/Debouchage/public/success",
+    cancel_url: "https://www.extrinnov.com/Debouchage/public/cancel",
+  });
 
-    res.json({ id: session.id });
-  } catch (error) {
-    console.error('Stripe error:', error);
-    res.status(500).json({ error: 'Something went wrong.' });
-  }
+  res.json({ url: session.url });
 });
 
-app.listen(4242, () => console.log('Server running on http://localhost:4242'));

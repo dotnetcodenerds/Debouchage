@@ -1,7 +1,7 @@
 {
-  "name": "website-3",
+  "name": "Debouchage",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "format": "prettier --write \"**/*.{html,js,css,json}\"",
     "start": "node server.js"
